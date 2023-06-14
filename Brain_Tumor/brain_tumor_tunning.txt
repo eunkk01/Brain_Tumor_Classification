@@ -1,0 +1,97 @@
+<<MobileNet>>
+- Image_size = 224*224
+- model-1
+	- Dense1 : 128
+	- Dense2 : 516
+	- optimizer : Adam, learning_rate = 1e-4
+
+	* 결과 *
+	Epoch 19/50
+	loss: 0.0070 - accuracy: 0.9975 - val_loss: 0.6450 - val_accuracy: 0.8554
+
+	model.evaluate(test_generator)
+	=> loss: 0.2188 - accuracy: 0.9461
+
+	//그래프를 보면 과적합이 심한데 test이미지의 정확도는 높음 -> Dropout 추가 해보자//
+
+- model-2 : Dropout 추가
+	- Dense1 : 516
+	- Dropout : 0.5
+	- Dense2 : 128
+	- Dropout : 0.5
+	- optimizer : Adam, learning_rate = 2e-5
+
+	* 결과 *
+	Epoch 26/50
+	loss: 0.0970 - accuracy: 0.9694 - val_loss: 0.3414 - val_accuracy: 0.8752
+
+	model.evaluate(test_generator)
+	loss: 0.2543 - accuracy: 0.9144
+
+	//여전히 과적합이 심함 -> 다른 모델 사용해보자//
+
+<<Xception>>
+- Image_size = 299*299
+- model-1
+	- Dense1 : 128
+	- Dropout : 0.5
+	- Dense2 : 516
+	- Dropout : 0.5
+	- optimizer : Adam, learning_rate = 2e-5
+
+	* 결과 *
+	Epoch 19/50
+	loss: 0.0335 - accuracy: 0.9896 - val_loss: 0.7702 - val_accuracy: 0.8911
+
+	model.evaluate(test_generator)
+	=> loss: 0.4707 - accuracy: 0.9081
+	
+	//과적합 심함 + 정확도 감소//
+	
+- model-2 : learning_rate 변경
+	- Dense1 : 128
+	- Dropout : 0.5
+	- Dense2 : 516
+	- Dropout : 0.5
+	- optimizer : Adam, learning_rate = 1e-5
+
+	* 결과 *
+	Epoch 22/50
+	loss: 0.0562 - accuracy: 0.9926 - val_loss: 0.4851 - val_accuracy: 0.8535
+
+	model.evaluate(test_generator)
+	=> loss: 0.2376 - accuracy: 0.9176
+	
+<<InceptionV3>>
+- Image_size = 224*224
+- model-1
+	- Dense1 : 128
+	- Dropout : 0.5
+	- Dense2 : 516
+	- Dropout : 0.5
+	- optimizer : Adam, learning_rate = 2e-5
+
+	* 결과 *
+	Epoch 19/50
+	loss: 0.0436 - accuracy: 0.9911 - val_loss: 0.5952 - val_accuracy: 0.8594
+
+	model.evaluate(test_generator)
+	loss: 0.3621 - accuracy: 0.9160
+	
+	//과적합 심함//
+	
+- model-2
+	- Dense2 : 516
+	- Dropout : 0.5
+	- optimizer : Adam, learning_rate = 1e-5
+
+	* 결과 *
+	Epoch 22/50
+	loss: 0.0562 - accuracy: 0.9926 - val_loss: 0.4851 - val_accuracy: 0.8535
+
+	model.evaluate(test_generator)
+	=> loss: 0.2376 - accuracy: 0.9176
+
+============판단==================
+MobileNet이 과적합이 가장 적음
+정확도는 비슷함
